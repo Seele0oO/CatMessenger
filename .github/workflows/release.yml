@@ -38,11 +38,17 @@ jobs:
 
     - name: Get Build Artifact Path
       id: get_build_artifact
-      run: echo "::set-output name=artifact_path::$(find ./build/libs/ -name '*.jar')"
+      run: 
+        echo "::set-output name=artifact_path::$(find ./build/libs/ -name '*.jar')"
+        ls -lah ./build/libs/
 
     - name: Get Build Artifact Name
       id: get_build_artifact_name
-      run: echo "::set-output name=artifact_name::$(basename ${{ steps.get_build_artifact.outputs.artifact_path }})"
+      run:
+        echo "::set-output name=artifact_name::$(basename ${{ steps.get_build_artifact.outputs.artifact_path }})"
+        ls -lah ${{ steps.get_build_artifact.outputs.artifact_path }}
+        tar -tf ${{ steps.get_build_artifact.outputs.artifact_path }}
+
 
     - name: Create Release
       id: create_release

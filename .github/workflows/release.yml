@@ -41,13 +41,13 @@ jobs:
       run: |
         echo "::set-output name=artifact_path::$(find ./build/libs/ -name '*.jar')"
         ls -lah ./build/libs/
+        tar -czvf build.tar.gz ./build
 
     - name: Get Build Artifact Name
       id: get_build_artifact_name
       run: |
         echo "::set-output name=artifact_name::$(basename ${{ steps.get_build_artifact.outputs.artifact_path }})"
         ls -lah ${{ steps.get_build_artifact.outputs.artifact_path }}
-        tar -tf ${{ steps.get_build_artifact.outputs.artifact_path }}
 
 
     - name: Create Release
@@ -67,6 +67,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ steps.get_build_artifact.outputs.artifact_path }}
-        asset_name: ${{ steps.get_build_artifact_name.outputs.artifact_name }}
-        asset_content_type: application/java-archive
+        # asset_path: ${{ steps.get_build_artifact.outputs.artifact_path }}
+        # asset_name: ${{ steps.get_build_artifact_name.outputs.artifact_name }}
+        asset_path: ./build.tar.gz
+        asset_name: build.tar.gz
+        asset_content_type: application/gzip
